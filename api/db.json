@@ -1,0 +1,29 @@
+{
+  "todos": [
+    {
+      "id": 1,
+      "task": "Fetch coffee",
+      "isDone": false
+    },
+    {
+      "id": 2,
+      "task": "Apply for MMB frontend role",
+      "isDone": false
+    },
+    {
+      "id": 15,
+      "task": "Complete code test",
+      "isDone": false
+    },
+    {
+      "id": 25,
+      "task": "Smör",
+      "isDone": true
+    },
+    {
+      "id": 26,
+      "task": "Mjölk",
+      "isDone": true
+    }
+  ]
+}
