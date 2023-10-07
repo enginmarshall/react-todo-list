@@ -46,7 +46,7 @@ export const createTodo = async (todo: Todo) => {
     body: JSON.stringify(todo),
     headers: {
       "Content-Type": "application/json",
-    },
+    }
   });
   return response.status;
 };
@@ -57,7 +57,7 @@ export const updateTodo = async (todo: Todo) => {
     body: JSON.stringify({ isDone: todo.isDone }),
     headers: {
       "Content-Type": "application/json",
-    },
+    }
   })
   return response.status;
 }

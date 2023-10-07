@@ -23,12 +23,12 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
     buttonClassName.current = "disabled-delete-button";
     setRerender(!rerender);
 
-    const newTodo = { ...todo };
-    newTodo.isDone = !todo.isDone
-    const status: number = await updateTodo(todo);
+    const updatedTodo = { ...todo };
+    updatedTodo.isDone = !todo.isDone
+    const status: number = await updateTodo(updatedTodo);
 
     if (status === 200) {
-      setTodo({ ...newTodo });
+      setTodo({ ...updatedTodo });
     }
     else {
       props.setErrorMessage("Error when updating todo.");
@@ -57,7 +57,7 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
 
 
   return (
-    <li className={`${statusClassName} ${disabledEnabledClassName.current}`}>
+    <li className={`todo-item ${statusClassName} ${disabledEnabledClassName.current}`}>
       <input
         disabled={isDisabled.current}
         type="checkbox"

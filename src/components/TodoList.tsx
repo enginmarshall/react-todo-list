@@ -8,7 +8,9 @@ import { Header } from "./Header";
 
 export const TodoList: React.FC = () => {
     const context = useContext(appContext);
-    const [todoList, setTodoList] = useState(context ? context.todoList : new Array<Todo>());
+    const todoListFromContext = context ? context.todoList : new Array<Todo>();
+    const defaultRefreshInterval = context ? context.defaultRefreshInterval : (1000 * 60 * 15);
+    const [todoList, setTodoList] = useState(todoListFromContext);
     const isLoading = useRef(false);
     const todoToRemove = useRef({} as Todo);
     const [errorMessage, setErrorMessage] = useState("");
@@ -19,9 +21,13 @@ export const TodoList: React.FC = () => {
         const status: number = await deleteTodo(todo);
         if (status === 200) {
             todoToRemove.current = todo;
-            setTodoList(todoList.filter(function (o) {
-                return o.id !== todoToRemove.current.id;
-            }));
+
+            if (context) {
+                context.todoList = todoList.filter(function (o) {
+                    return o.id !== todoToRemove.current.id;
+                });
+            }
+            setTodoList(context ? context.todoList : new Array<Todo>());
         }
         else {
             setErrorMessage("Error when deleting todo.");
@@ -41,9 +47,9 @@ export const TodoList: React.FC = () => {
             }
             const status: number = await createTodo(newTodo);
             if (status === 201) {
-                // const newTodos = [...todoList];
-                // newTodos.push(newTodo);
-                // setTodoList(newTodos);
+                const newTodos = [...todoList];
+                newTodos.push(newTodo);
+                setTodoList(newTodos);
             }
             else {
                 setErrorMessage("Error when creating todo.");
@@ -54,10 +60,10 @@ export const TodoList: React.FC = () => {
 
     useEffect(() => {
         setInterval(() => {
-            console.log("Refetching...")
-            setTodoList(todoList);
-        }, 100000);
-    })
+            console.log("Refetching...");
+            setTodoList(context ? context.todoList : new Array<Todo>());
+        }, defaultRefreshInterval);
+    }, [context, defaultRefreshInterval, todoList]);
 
 
     const listTodos = todoList.map((todo, index) => {
