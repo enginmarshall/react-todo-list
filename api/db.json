@@ -8,22 +8,12 @@
     {
       "id": 2,
       "task": "Apply for MMB frontend role",
-      "isDone": false
+      "isDone": true
     },
     {
-      "id": 15,
+      "id": 3,
       "task": "Complete code test",
       "isDone": false
-    },
-    {
-      "id": 25,
-      "task": "Smör",
-      "isDone": true
-    },
-    {
-      "id": 26,
-      "task": "Mjölk",
-      "isDone": true
     }
   ]
 }

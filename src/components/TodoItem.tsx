@@ -53,9 +53,6 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
     disabledEnabledClassName.current = 'enabled';
     buttonClassName.current = "enabled-delete-button";
     setRerender(rerender);
-    const deletedTodo = await getTodoById(todo.id);
-    console.log("🚀 ~ file: TodoItem.tsx:48 ~ onDelete ~ deletedTodo:", deletedTodo)
-    return deletedTodo === null;
   }
 
 
@@ -69,7 +66,7 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
       />
       {todo.task}
       <div className={`delete-button ${buttonClassName.current}`}
-        onClick={() => onDelete(todo)}>Delete {todo.id}</div>
+        onClick={() => onDelete(todo)}>Delete</div>
     </li>
   );
 }

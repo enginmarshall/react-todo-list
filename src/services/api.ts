@@ -25,7 +25,6 @@ export const getTodoById = async (id: number) => {
 export const deleteTodo = async (todo: Todo) => {
   const todoToDelete: Todo = await getTodoById(todo.id);
   let status: number = 0;
-  console.log("🚀 ~ file: api.ts:27 ~ deleteTodo ~ todoToDelete:", todoToDelete)
   if (todoToDelete.id > 0) {
     const response = await fetch(`${baseUrl}/todos/${todo.id}`, {
       method: "DELETE",
@@ -60,6 +59,5 @@ export const updateTodo = async (todo: Todo) => {
       "Content-Type": "application/json",
     },
   })
-  console.log("🚀 ~ file: api.ts:65 ~ updateTodo ~ status:", response.status)
   return response.status;
 }

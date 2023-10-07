@@ -1,9 +1,10 @@
 import { createTodo, deleteTodo } from "../services/api";
 import { Todo } from "../models/Todo";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { TodoItem } from "./TodoItem";
 import { TodoForm } from "./TodoForm";
 import { appContext } from "../AppContext";
+import { Header } from "./Header";
 
 export const TodoList: React.FC = () => {
     const context = useContext(appContext);
@@ -16,7 +17,6 @@ export const TodoList: React.FC = () => {
         setErrorMessage("");
         isLoading.current = true;
         const status: number = await deleteTodo(todo);
-        console.log("🚀 ~ file: TodoList.tsx:20 ~ removeTodo ~ status:", status)
         if (status === 200) {
             todoToRemove.current = todo;
             setTodoList(todoList.filter(function (o) {
@@ -41,9 +41,9 @@ export const TodoList: React.FC = () => {
             }
             const status: number = await createTodo(newTodo);
             if (status === 201) {
-                const newTodos = [...todoList];
-                newTodos.push(newTodo);
-                setTodoList(newTodos);
+                // const newTodos = [...todoList];
+                // newTodos.push(newTodo);
+                // setTodoList(newTodos);
             }
             else {
                 setErrorMessage("Error when creating todo.");
@@ -51,6 +51,14 @@ export const TodoList: React.FC = () => {
         }
         isLoading.current = false;
     };
+
+    useEffect(() => {
+        setInterval(() => {
+            console.log("Refetching...")
+            setTodoList(todoList);
+        }, 100000);
+    })
+
 
     const listTodos = todoList.map((todo, index) => {
         return (
@@ -62,13 +70,9 @@ export const TodoList: React.FC = () => {
 
     return (
         <div className="todo-area">
-            <h1>My TODO app</h1>
+            <Header headerText="MY TODO app" headerType="h1" />
             <TodoForm onAdd={addTodo} />
-            <label>Todolist:</label> {todoList.length}
-            <br />
-            <label>TodoTo remove:</label> {todoToRemove.current.task}
-            <br />
-            <h1>My TODO list</h1>
+            <Header headerText="MY TODO list" headerType="h2" />
             <ul>
                 {listTodos}
             </ul>

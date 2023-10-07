@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 
 interface ITodoFormProps {
   onAdd: (task: string) => void;
@@ -5,23 +6,30 @@ interface ITodoFormProps {
 
 export const TodoForm: React.FC<ITodoFormProps> = (props: ITodoFormProps) => {
 
-  let task = "";
+  const [task, setTask] = useState("");
+
+
+  const onAdd = (task: string) => {
+    props.onAdd(task);
+    setTask("");
+  }
 
   return (
     <fieldset className="todo-form">
-      <legend>Create Todo</legend>
+      <legend>Create Todo item</legend>
       <input
         type="text"
         onKeyDown={(e) => {
-          if (e.keyCode === 13) {
-            props.onAdd(task);
+          if (e.key === "Enter") {
+            onAdd(task);
           }
         }}
-        onChange={(e) => task = e.target.value}
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
       />
       <button
         onClick={() => {
-          props.onAdd(task);
+          onAdd(task);
         }}
       >
         Add task
