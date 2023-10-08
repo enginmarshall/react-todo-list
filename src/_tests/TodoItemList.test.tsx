@@ -9,7 +9,8 @@ describe('TodoItemList test', () => {
 
     const context: IAppContext = {
         todoList: TodoListMock,
-        defaultRefreshInterval: 60000
+        defaultRefreshInterval: 60000,
+        isRefetching: false
     };
 
     test("The todo list is shown on the page", () => {

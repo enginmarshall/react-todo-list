@@ -3,17 +3,17 @@
     {
       "id": 1,
       "task": "Fetch coffee",
-      "isDone": false
+      "isDone": true
     },
     {
       "id": 2,
       "task": "Apply for MMB frontend role",
-      "isDone": false
+      "isDone": true
     },
     {
       "id": 3,
       "task": "Complete code test",
-      "isDone": false
+      "isDone": true
     }
   ]
 }

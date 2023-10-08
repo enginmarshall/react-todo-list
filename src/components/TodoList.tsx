@@ -8,10 +8,9 @@ import { Header } from "./Header";
 
 export const TodoList: React.FC = () => {
     const context = useContext(appContext);
-    const todoListFromContext = context ? context.todoList : new Array<Todo>();
     const defaultRefreshInterval = context ? context.defaultRefreshInterval : (1000 * 60 * 15);
-    const [todoList, setTodoList] = useState(todoListFromContext);
     const [isLoading, setIsLoading] = useState(false);
+    const [todoList, setTodoList] = useState(context ? context.todoList : new Array<Todo>());
     const todoToRemove = useRef({} as Todo);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -21,13 +20,12 @@ export const TodoList: React.FC = () => {
         const status: number = await deleteTodo(todo);
         if (status === 200) {
             todoToRemove.current = todo;
-
+            setTodoList(todoList.filter((o) => {
+                return o.id !== todoToRemove.current.id;
+            }));
             if (context) {
-                context.todoList = todoList.filter(function (o) {
-                    return o.id !== todoToRemove.current.id;
-                });
+                context.todoList = [...todoList];
             }
-            setTodoList(context ? context.todoList : new Array<Todo>());
         }
         else {
             setErrorMessage("Error when deleting todo.");
@@ -39,29 +37,41 @@ export const TodoList: React.FC = () => {
         setErrorMessage("");
         setIsLoading(true);
         if (task.trim().length > 0) {
-            const maxId = (Math.max(...todoList.map(o => o.id)) + 1);
-            const newTodo = {
-                id: maxId,
-                task: task,
-                isDone: false
-            }
-            const status: number = await createTodo(newTodo);
-            if (status === 201) {
-                const newTodos = [...todoList];
-                newTodos.push(newTodo);
-                setTodoList(newTodos);
-            }
-            else {
-                setErrorMessage("Error when creating todo.");
+            if (context) {
+
+                const maxId = (Math.max(...context.todoList.map(o => o.id)) + 1);
+                const newTodo = {
+                    id: maxId,
+                    task: task,
+                    isDone: false
+                }
+                const status: number = await createTodo(newTodo);
+                if (status === 201) {
+                    if (context) {
+                        const newTodos = [...todoList];
+                        newTodos.push(newTodo);
+                        setTodoList(newTodos);
+                        context.todoList = [...newTodos];
+                    }
+                }
+                else {
+                    setErrorMessage("Error when creating todo.");
+                }
             }
         }
         setIsLoading(false);
     };
 
     useEffect(() => {
-        setInterval(() => {
+        const interval = setInterval(() => {
             console.log("Refetching...");
-            setTodoList(context ? context.todoList : new Array<Todo>());
+            console.log("isRefetching", context?.isRefetching);
+            if (context) {
+                if (!context.isRefetching) {
+                    context.todoList = [...todoList];
+                }
+            }
+            clearInterval(interval);
         }, defaultRefreshInterval);
     }, [context, defaultRefreshInterval, todoList]);
 
