@@ -8,7 +8,7 @@ import { IAppContext } from "./models/IAppContext";
 import './css/style.css';
 
 function App() {
-  const defaultRefreshInterval = 6000;  // (1000 * 60 * 15);
+  const defaultRefreshInterval = (1000 * 60 * 15);
 
   const todoListQuery = useQuery<Array<Todo>>(["todoList"],
     getTodoList,

@@ -69,9 +69,9 @@ export const TodoList: React.FC = () => {
             if (context) {
                 if (!context.isRefetching) {
                     context.todoList = [...todoList];
+                    clearInterval(interval);
                 }
             }
-            clearInterval(interval);
         }, defaultRefreshInterval);
     }, [context, defaultRefreshInterval, todoList]);
 
