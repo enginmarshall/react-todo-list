@@ -27,7 +27,7 @@ export const TodoForm: React.FC<ITodoFormProps> = (props: ITodoFormProps) => {
         value={task}
         onChange={(e) => setTask(e.target.value)}
       />
-      <button
+      <button className="add-button"
         onClick={() => {
           onAdd(task);
         }}

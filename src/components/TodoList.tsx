@@ -11,13 +11,13 @@ export const TodoList: React.FC = () => {
     const todoListFromContext = context ? context.todoList : new Array<Todo>();
     const defaultRefreshInterval = context ? context.defaultRefreshInterval : (1000 * 60 * 15);
     const [todoList, setTodoList] = useState(todoListFromContext);
-    const isLoading = useRef(false);
+    const [isLoading, setIsLoading] = useState(false);
     const todoToRemove = useRef({} as Todo);
     const [errorMessage, setErrorMessage] = useState("");
 
     const removeTodo = async (todo: Todo) => {
         setErrorMessage("");
-        isLoading.current = true;
+        setIsLoading(true);
         const status: number = await deleteTodo(todo);
         if (status === 200) {
             todoToRemove.current = todo;
@@ -32,12 +32,12 @@ export const TodoList: React.FC = () => {
         else {
             setErrorMessage("Error when deleting todo.");
         }
-        isLoading.current = false;
+        setIsLoading(false);
     };
 
     const addTodo = async (task: string) => {
         setErrorMessage("");
-        isLoading.current = true;
+        setIsLoading(true);
         if (task.trim().length > 0) {
             const maxId = (Math.max(...todoList.map(o => o.id)) + 1);
             const newTodo = {
@@ -55,7 +55,7 @@ export const TodoList: React.FC = () => {
                 setErrorMessage("Error when creating todo.");
             }
         }
-        isLoading.current = false;
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -68,9 +68,7 @@ export const TodoList: React.FC = () => {
 
     const listTodos = todoList.map((todo, index) => {
         return (
-            todo.id !== todoToRemove.current.id ?
-                <TodoItem todo={todo} onDelete={removeTodo} setErrorMessage={setErrorMessage} key={`${todo.id}-${index}`} />
-                : <></>
+            <TodoItem todo={todo} onDelete={removeTodo} setErrorMessage={setErrorMessage} key={`${todo.id}-${index}`} />
         )
     });
 
@@ -87,7 +85,7 @@ export const TodoList: React.FC = () => {
                 <div className="error-message">{errorMessage}</div>
             }
             {
-                isLoading.current &&
+                isLoading &&
                 <>Laddar...</>
             }
         </div>

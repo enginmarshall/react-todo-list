@@ -35,10 +35,12 @@ ul {
     padding:0;
 }
 
-li {
+.todo-item {
     margin-bottom:1rem;
     padding:0.7rem;
 }
+
+
 input {
     margin-right:1rem;
 }
@@ -47,7 +49,7 @@ input {
 }
 
 .delete-button {
-    display: inline-block;
+    display: inline;
     padding: 1px 4px;
     border-radius: 3;
     border: 1px solid #767676;
@@ -68,4 +70,8 @@ input {
 .error-message {
     border: 1px solid red;
     padding:1rem;
+}
+
+.todo-item:hover, .add-button:hover {
+    transform: scale(1.03);
 }

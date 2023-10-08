@@ -1,11 +1,11 @@
 import { useQuery } from "react-query";
 import { TodoList } from "./components/TodoList";
-import './css/style.css';
 import { getTodoList } from "./services/api";
 import { Todo } from "./models/Todo";
 import { AppContextProvider } from "./AppContext";
 import { useMemo } from "react";
 import { IAppContext } from "./models/IAppContext";
+import './css/style.css';
 
 function App() {
   const defaultRefreshInterval = (1000 * 60 * 15);

@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { Todo } from "../models/Todo";
-import { getTodoById, updateTodo } from "../services/api";
+import { updateTodo } from "../services/api";
 
 interface ITodoItemProps {
   todo: Todo;
@@ -55,16 +55,19 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
     setRerender(rerender);
   }
 
+  const todoId = `${todo.id}todo`;
 
   return (
     <li className={`todo-item ${statusClassName} ${disabledEnabledClassName.current}`}>
       <input
+        id={todoId}
+        name={todoId}
         disabled={isDisabled.current}
         type="checkbox"
         checked={todo.isDone}
         onChange={() => updateTodoStatus()}
       />
-      {todo.task}
+      <label htmlFor={todoId}>{todo.task}</label>
       <div className={`delete-button ${buttonClassName.current}`}
         onClick={() => onDelete(todo)}>Delete</div>
     </li>
