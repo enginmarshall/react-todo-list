@@ -8,7 +8,7 @@ import { IAppContext } from "./models/IAppContext";
 import './css/style.css';
 
 function App() {
-  const defaultRefreshInterval = (1000 * 60 * 15);
+  const defaultRefreshInterval = 60000; // (1000 * 60 * 15);
 
   const todoListQuery = useQuery<Array<Todo>>(["todoList"],
     getTodoList,
@@ -27,7 +27,7 @@ function App() {
     isRefetching: todoListQuery.isRefetching
   }
 
-  if (todoListQuery.isLoading || todoListQuery.isLoading || todoListMemo.length === 0) {
+  if (todoListQuery.isLoading || todoListQuery.isRefetching) {
     return <>Loading todos...</>;
   }
 
