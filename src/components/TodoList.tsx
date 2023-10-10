@@ -1,6 +1,6 @@
 import { createTodo, deleteTodo } from "../services/api";
 import { Todo } from "../models/Todo";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { TodoItem } from "./TodoItem";
 import { TodoForm } from "./TodoForm";
 import { appContext } from "../AppContext";
