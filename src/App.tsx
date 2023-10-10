@@ -8,7 +8,7 @@ import { IAppContext } from "./models/IAppContext";
 import './css/style.css';
 
 function App() {
-  const defaultRefreshInterval = 60000; // (1000 * 60 * 15);
+  const defaultRefreshInterval = 6000; // (1000 * 60 * 15);
 
   const todoListQuery = useQuery<Array<Todo>>(["todoList"],
     getTodoList,
@@ -16,25 +16,28 @@ function App() {
       staleTime: 100000,
       refetchIntervalInBackground: true,
       // Ser till att todo listan som hämtas från servern hämtas om var femtonde minut
-      refetchInterval: defaultRefreshInterval
+      refetchInterval: defaultRefreshInterval,
     });
 
   let todoListMemo: Array<Todo> = useMemo<Array<Todo>>(() => todoListQuery.data ? todoListQuery.data : new Array<Todo>(), [todoListQuery.data]);
 
+  const updateContextReloading = (isReloading: boolean) => {
+    appContext.isReloading = isReloading;
+    return appContext.isReloading;
+  }
+
   const appContext: IAppContext = {
     todoList: todoListMemo,
     defaultRefreshInterval: defaultRefreshInterval,
-    isRefetching: todoListQuery.isRefetching
-  }
-
-  if (todoListQuery.isLoading || todoListQuery.isRefetching) {
-    return <>Loading todos...</>;
+    isRefetching: todoListQuery.isRefetching,
+    isReloading: false,
+    setIsReloading: updateContextReloading
   }
 
   return (
     <AppContextProvider value={appContext}>
       <main>
-        <TodoList />
+        <TodoList rqQuey={todoListQuery} />
       </main>
     </AppContextProvider>
   );

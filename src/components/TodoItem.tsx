@@ -1,6 +1,7 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useContext } from "react";
 import { Todo } from "../models/Todo";
 import { updateTodo } from "../services/api";
+import { appContext } from "../AppContext";
 
 interface ITodoItemProps {
   todo: Todo;
@@ -9,16 +10,16 @@ interface ITodoItemProps {
 }
 
 export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
+  const context = useContext(appContext);
   const [todo, setTodo] = useState({ ...props.todo });
   const [rerender, setRerender] = useState(false);
   let statusClassName = todo.isDone ? "done" : '';
-  const isDisabled = useRef(false);
   let disabledEnabledClassName = useRef('enabled');
   let buttonClassName = useRef('enabled-delete-button');
 
   const updateTodoStatus = async () => {
     props.setErrorMessage("");
-    isDisabled.current = true;
+    context?.setIsReloading(true);
     disabledEnabledClassName.current = "disabled";
     buttonClassName.current = "disabled-delete-button";
     setRerender(!rerender);
@@ -34,7 +35,7 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
       props.setErrorMessage("Error when updating todo.");
     }
 
-    isDisabled.current = false;
+    context?.setIsReloading(false);
     disabledEnabledClassName.current = 'enabled';
     buttonClassName.current = "enabled-delete-button";
     statusClassName = todo.isDone ? "done" : '';
@@ -42,14 +43,14 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
   }
 
   const onDelete = async (todo: Todo) => {
-    isDisabled.current = true;
+    context?.setIsReloading(true);
     disabledEnabledClassName.current = "disabled";
     buttonClassName.current = "disabled-delete-button";
     setRerender(!rerender);
 
     await props.onDelete(todo);
 
-    isDisabled.current = false;
+    context?.setIsReloading(false);
     disabledEnabledClassName.current = 'enabled';
     buttonClassName.current = "enabled-delete-button";
     setRerender(rerender);
@@ -62,14 +63,15 @@ export const TodoItem: React.FC<ITodoItemProps> = (props: ITodoItemProps) => {
       <input
         id={todoId}
         name={todoId}
-        disabled={isDisabled.current}
+        disabled={context?.isReloading}
         type="checkbox"
         checked={todo.isDone}
         onChange={() => updateTodoStatus()}
       />
       <label htmlFor={todoId}>{todo.task}</label>
-      <div className={`delete-button ${buttonClassName.current}`}
-        onClick={() => onDelete(todo)}>Delete</div>
+      <button className={`delete-button ${buttonClassName.current}`}
+        disabled={context?.isReloading}
+        onClick={() => onDelete(todo)}>Delete</button>
     </li>
   );
 }

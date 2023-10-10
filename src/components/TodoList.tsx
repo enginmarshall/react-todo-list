@@ -5,12 +5,15 @@ import { TodoItem } from "./TodoItem";
 import { TodoForm } from "./TodoForm";
 import { appContext } from "../AppContext";
 import { Header } from "./Header";
+import { UseQueryResult } from "react-query";
 
-export const TodoList: React.FC = () => {
+interface ITodoListProps {
+    rqQuey: UseQueryResult<Todo[], unknown>
+}
+
+export const TodoList: React.FC<ITodoListProps> = (props: ITodoListProps) => {
     const context = useContext(appContext);
-    const defaultRefreshInterval = context ? context.defaultRefreshInterval : (1000 * 60 * 15);
     const [isLoading, setIsLoading] = useState(false);
-    const [todoList, setTodoList] = useState(context ? context.todoList : new Array<Todo>());
     const todoToRemove = useRef({} as Todo);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -20,11 +23,10 @@ export const TodoList: React.FC = () => {
         const status: number = await deleteTodo(todo);
         if (status === 200) {
             todoToRemove.current = todo;
-            setTodoList(todoList.filter((o) => {
-                return o.id !== todoToRemove.current.id;
-            }));
+            await props.rqQuey.refetch();
             if (context) {
-                context.todoList = [...todoList];
+                const index = context.todoList.findIndex((o) => o.id === todo.id);
+                context.todoList.slice(index, 1);
             }
         }
         else {
@@ -48,10 +50,7 @@ export const TodoList: React.FC = () => {
                 const status: number = await createTodo(newTodo);
                 if (status === 201) {
                     if (context) {
-                        const newTodos = [...todoList];
-                        newTodos.push(newTodo);
-                        setTodoList(newTodos);
-                        context.todoList = [...newTodos];
+                        context.todoList.push(newTodo);
                     }
                 }
                 else {
@@ -62,21 +61,7 @@ export const TodoList: React.FC = () => {
         setIsLoading(false);
     };
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            console.log("Refetching...");
-            console.log("isRefetching", context?.isRefetching);
-            if (context) {
-                if (!context.isRefetching) {
-                    context.todoList = [...todoList];
-                    clearInterval(interval);
-                }
-            }
-        }, defaultRefreshInterval);
-    }, [context, defaultRefreshInterval, todoList]);
-
-
-    const listTodos = todoList.map((todo, index) => {
+    const listTodos = context?.todoList.map((todo, index) => {
         return (
             <TodoItem todo={todo} onDelete={removeTodo} setErrorMessage={setErrorMessage} key={`${todo.id}-${index}`} />
         )
@@ -87,9 +72,11 @@ export const TodoList: React.FC = () => {
             <Header headerText="MY TODO app" headerType="h1" />
             <TodoForm onAdd={addTodo} />
             <Header headerText="MY TODO list" headerType="h2" />
-            <ul>
-                {listTodos}
-            </ul>
+            {context && context.todoList?.length > 0 &&
+                <ul data-testid="todoList">
+                    {listTodos}
+                </ul>
+            }
             {
                 errorMessage.length > 0 &&
                 <div className="error-message">{errorMessage}</div>
