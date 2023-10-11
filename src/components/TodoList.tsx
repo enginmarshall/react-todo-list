@@ -24,10 +24,6 @@ export const TodoList: React.FC<ITodoListProps> = (props: ITodoListProps) => {
         if (status === 200) {
             todoToRemove.current = todo;
             await props.rqQuey.refetch();
-            if (context) {
-                const index = context.todoList.findIndex((o) => o.id === todo.id);
-                context.todoList.slice(index, 1);
-            }
         }
         else {
             setErrorMessage("Error when deleting todo.");
@@ -49,9 +45,7 @@ export const TodoList: React.FC<ITodoListProps> = (props: ITodoListProps) => {
                 }
                 const status: number = await createTodo(newTodo);
                 if (status === 201) {
-                    if (context) {
-                        context.todoList.push(newTodo);
-                    }
+                    await props.rqQuey.refetch();
                 }
                 else {
                     setErrorMessage("Error when creating todo.");

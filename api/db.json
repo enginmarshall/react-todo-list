@@ -1,12 +1,17 @@
 {
   "todos": [
     {
-      "id": 1,
+      "id": 11,
       "task": "Kaffe",
-      "isDone": false
+      "isDone": true
     },
     {
-      "id": 3,
+      "id": 12,
+      "task": "Bröd",
+      "isDone": true
+    },
+    {
+      "id": 13,
       "task": "Vatten",
       "isDone": false
     }
