@@ -1,5 +1,4 @@
-# Kodtest för MedMera Bank
-
+# TODO list
 ## Uppgift
 
 En TODO-applikation har byggts, men har tyvärr en del buggar.
@@ -12,10 +11,6 @@ Applikationen ska:
   * En todo bockas av
   * En todo tas bort
 
-
-Du har fått i uppgift att refaktorera applikation och fixa eventuella buggar.
-
-Du har i stort sett fria händer, där förutsättningen är att applikationen fortsatt byggs i React och använder TypeScript. Du får alltså dra in vilka bibliotek som helst som du känner löser de problem som du står inför.
 
 
 ## API endpoints
